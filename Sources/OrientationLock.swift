@@ -43,6 +43,6 @@ public enum OrientationLock {
 
 public final class OrientationLockDelegate: NSObject, UIApplicationDelegate {
     public func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        OrientationLock.mask
+        SystemDisplay.effectiveMask(OrientationLock.mask)
     }
 }

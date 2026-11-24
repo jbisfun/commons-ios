@@ -27,7 +27,11 @@ public enum NotificationHub {
         handlers.removeAll { $0.0 == app }
         handlers.append((app, handler))
         UNUserNotificationCenter.current().delegate = HubDelegate.shared
+        AppNotifications.install()
     }
+
+    /// Apps with a registered handler.
+    public static var registeredApps: [String] { handlers.map(\.0) }
 
     /// Replaces the categories of `app`, keeping the other apps' ones.
     public static func setCategories(_ app: String, _ set: Set<UNNotificationCategory>) {
@@ -36,7 +40,9 @@ public enum NotificationHub {
     }
 
     fileprivate static func willPresent(_ n: UNNotification) -> UNNotificationPresentationOptions {
-        for (_, h) in handlers { if let o = h.willPresent(n) { return o } }
+        // Apps blocked in Settings > Notifications present nothing.
+        for (app, h) in handlers { if let o = h.willPresent(n) { return AppNotifications.isEnabled(app) ? o : [] } }
+        if let app = AppNotifications.owner(ofIdentifier: n.request.identifier), !AppNotifications.isEnabled(app) { return [] }
         return [.banner, .list, .sound]
     }
 
