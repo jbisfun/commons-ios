@@ -45,6 +45,7 @@ public struct SettingsToggle: View {
         Toggle(isOn: $isOn) {
             Text(title).font(.system(size: 16)).foregroundStyle(palette.textColor)
         }
+        .toggleStyle(CheckmarkSwitchStyle())
         .tint(palette.primaryColor)
         .padding(.horizontal, 16)
         .padding(.vertical, 8)
